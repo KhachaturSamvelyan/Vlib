@@ -1,7 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+
 body{
   background-image: url('.././public/img/bg.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   min-height: 100vh;
+  background-attachment: fixed;
+  padding: 0;
+  margin: 0;
 }
+

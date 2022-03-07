@@ -1,16 +1,24 @@
 import * as UI from '@mui/material';
 import SearchInput from '../../components/SearchInput/SearchInput';
-import { getApiResource } from '../../utils/api';
-import { API_KEY, API_URL_SEARCH, API_TITLE_SEARCH } from '../../constants/constants';
+import SearchResult from '../../components/SearchPage/SearchResult/SearchResult';
 
-import { useState, useEffect } from 'react';
-
+import { skipToken } from "@reduxjs/toolkit/query"
+import { useState } from 'react';
+import { useGetBookByNameQuery } from '../../services/bookApi';
 
 
 
 const SearchPage = () => {
-
+    
     const [books, setBooks] = useState([])
+    const [countResult, setCountResult] = useState([])
+    
+    const [value, setValue] = useState('')
+
+
+    
+    const { data , error, isLoading } = useGetBookByNameQuery(value)
+
 
     const theme = UI.createTheme({
         typography: {
@@ -21,26 +29,32 @@ const SearchPage = () => {
         },
     });
 
-    const query = 'Js';
-    const searchUrl = API_URL_SEARCH+query+API_TITLE_SEARCH+API_KEY;
+    
 
-    const getResource = async () => {
-        const res = await getApiResource(searchUrl);
-        const bookList = res.items.map((item) => {
-            return {
-                id: item.id,
-                title: item.volumeInfo.title,
-                img: item.volumeInfo?.imageLinks?.thumbnail
-            }
-        })
-        console.log(bookList)
-        setBooks(bookList)
+    const getResource =  (event) => {
+     
+        event.preventDefault();
+        if(data !== undefined){
+            const bookList = data.items.map((item) => {
+                return {
+                    id: item.id,
+                    title: item.volumeInfo.title,
+                    img: item.volumeInfo?.imageLinks?.thumbnail,
+                    authors: item.volumeInfo?.authors,
+                    categories: item.volumeInfo?.categories
+                }
+                })
+                setBooks(bookList)
+                setCountResult(data.totalItems)
+        } 
     }
     
 
-    useEffect(() => {
-        getResource();
-    }, []);
+
+    const handleChange = (e) => {
+        setValue(e.target.value)
+    }
+  
 
     return (
         <>
@@ -53,20 +67,12 @@ const SearchPage = () => {
                     <UI.Typography variant="h1">Search for book</UI.Typography>
                 </UI.ThemeProvider>
             </UI.Box>
-            <SearchInput/>
-            <div>
-                {
-                    books.map((item, index)=>{
-                        return (
-                            <div key={item.id+index}>
-                                <img src={item.img} alt={item.title}></img>
-                                <h4>{item.title}</h4>
-                            </div>
-                        )
-                    })
-                }
-
-            </div>
+            <SearchInput 
+                handleInput={getResource}
+                value={value}
+                handleChange={handleChange}
+            />
+            <SearchResult countResult={countResult} books={books}/>
         </>
     );
 };

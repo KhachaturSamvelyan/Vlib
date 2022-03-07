@@ -1,0 +1,39 @@
+.card {
+    background-color: #f3f2f1;
+    padding: 25px;
+    height: 100%;
+    max-height: -webkit-fill-available; 
+}
+
+.card img{
+    display: flex;
+    width: 156px;
+    height: auto;
+    object-fit: cover;
+    margin: 0 auto;
+    min-height: 204px;
+    max-height: 204px;
+}
+.card h5{
+    font-family: 'Roboto', sans-serif;
+    font-weight: 900;
+    font-size: 20px;
+}
+
+.card p {
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: normal;
+    color: gray;
+
+}
+.card p span {
+    display: block;
+    margin-bottom: 4px;
+    
+}
+
+.card .categories_p {
+    text-decoration: underline;
+    color: black;
+}
